@@ -1,311 +1,187 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中芯国际 (688981.SH) K线行情面板</title>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: #f5f6fa;
-            color: #2d3436;
-            padding: 20px;
-        }
-        .header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 20px;
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .header .subtitle {
-            font-size: 14px;
-            color: #a0a3bd;
-        }
-        .header .code {
-            display: inline-block;
-            background: rgba(255,255,255,0.12);
-            padding: 3px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-left: 10px;
-            font-family: "SF Mono", "Fira Code", monospace;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 18px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: transform 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-        .stat-card .label {
-            font-size: 12px;
-            color: #9c9c9c;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        .stat-card .value {
-            font-size: 22px;
-            font-weight: 700;
-            font-family: "SF Mono", "Fira Code", monospace;
-        }
-        .stat-card .change {
-            font-size: 13px;
-            margin-top: 4px;
-        }
-        .up { color: #ef232a; }
-        .down { color: #14b143; }
-        .chart-container {
-            background: #fff;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-        }
-        .chart-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .chart-title::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 16px;
-            background: #0984e3;
-            border-radius: 2px;
-        }
-        #klineChart { width: 100%; height: 520px; }
-        #volChart { width: 100%; height: 200px; }
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #b2bec3;
-            padding: 16px 0;
-        }
-        .legend-info {
-            display: flex;
-            gap: 20px;
-            margin-top: 8px;
-            font-size: 12px;
-            color: #636e72;
-        }
-        .legend-item { display: flex; align-items: center; gap: 6px; }
-        .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI量化公益课 — 学习成果展示</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #1a1a4e 50%, #243b55 100%);
+    min-height: 100vh; color: #fff; padding: 40px 20px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  .hero { text-align: center; margin-bottom: 50px; }
+  .hero h1 {
+    font-size: 36px; font-weight: 800; margin-bottom: 12px;
+    background: linear-gradient(90deg, #64f38c, #4facfe, #f093fb);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero .subtitle { font-size: 16px; color: #a0a3bd; }
+  .hero .date {
+    display: inline-block; margin-top: 10px; padding: 4px 16px;
+    background: rgba(255,255,255,0.08); border-radius: 20px;
+    font-size: 13px; color: #8892b0;
+  }
+  .task-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px;
+  }
+  @media (max-width: 700px) { .task-grid { grid-template-columns: 1fr; } }
+  .task-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px; transition: all 0.3s ease;
+    backdrop-filter: blur(10px); position: relative; overflow: hidden;
+  }
+  .task-card:hover {
+    transform: translateY(-4px); border-color: rgba(100,243,140,0.3);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .task-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+  .task-card.task1::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+  .task-card.task2::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+  .task-badge {
+    display: inline-block; padding: 4px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; margin-bottom: 14px;
+  }
+  .task1 .task-badge { background: rgba(79,172,254,0.15); color: #4facfe; }
+  .task2 .task-badge { background: rgba(245,87,108,0.15); color: #f5576c; }
+  .task-card h2 { font-size: 20px; margin-bottom: 10px; }
+  .task-card .desc { font-size: 14px; color: #8892b0; margin-bottom: 16px; line-height: 1.7; }
+  .task-card .tags { margin-bottom: 20px; }
+  .task-card .tag {
+    display: inline-block; padding: 2px 10px; margin: 2px;
+    background: rgba(255,255,255,0.06); border-radius: 8px;
+    font-size: 12px; color: #a0a3bd;
+  }
+  .btn {
+    display: inline-block; padding: 10px 24px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    transition: all 0.2s; cursor: pointer; border: none;
+  }
+  .task1 .btn {
+    background: linear-gradient(135deg, #4facfe, #00f2fe); color: #0f0c29;
+  }
+  .task2 .btn {
+    background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff;
+  }
+  .btn:hover { opacity: 0.9; transform: scale(1.03); }
+  .feature-section {
+    background: rgba(255,255,255,0.04); border-radius: 16px; padding: 28px;
+    margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.08);
+  }
+  .feature-section h3 {
+    font-size: 18px; margin-bottom: 16px; color: #64f38c;
+  }
+  .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .feature-item {
+    background: rgba(255,255,255,0.03); padding: 14px 16px; border-radius: 10px;
+    border-left: 3px solid rgba(100,243,140,0.4);
+  }
+  .feature-item .ft-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .feature-item .ft-desc { font-size: 12px; color: #8892b0; }
+  .footer {
+    text-align: center; padding: 30px 0; color: #555; font-size: 13px;
+  }
+  .footer a { color: #4facfe; text-decoration: none; }
+  .repo-link {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+    padding: 6px 16px; background: rgba(255,255,255,0.06); border-radius: 20px;
+    font-size: 13px; color: #8892b0; text-decoration: none; transition: all 0.2s;
+  }
+  .repo-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>中芯国际 K线行情面板<span class="code">688981.SH</span></h1>
-        <p class="subtitle">数据周期: 2025-07-04 至 2026-07-03 · 数据来源: Tushare · 共 236 个交易日</p>
+<div class="container">
+
+  <div class="hero">
+    <h1>AI 量化公益课</h1>
+    <div class="subtitle">学习成果展示 · 股票数据分析与技术指标可视化</div>
+    <br>
+    <div class="date">2026-07-04</div>
+  </div>
+
+  <div class="task-grid">
+    <!-- Task 1 -->
+    <div class="task-card task1">
+      <div class="task-badge">Task 1</div>
+      <h2>中芯国际 K线行情面板</h2>
+      <div class="desc">
+        基于 ECharts 构建中芯国际(688981.SH)近一年日线行情可视化面板，
+        包含 K线图、成交量、MA均线及技术指标交互分析。
+      </div>
+      <div class="tags">
+        <span class="tag">ECharts</span>
+        <span class="tag">K线图</span>
+        <span class="tag">成交量</span>
+        <span class="tag">MA均线</span>
+        <span class="tag">Jupyter Notebook</span>
+      </div>
+      <a href="Task1/index.html" class="btn">查看可视化面板 →</a>
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="label">最新收盘价</div>
-            <div class="value">¥140.31</div>
-            <div class="change down">
-                -2.63% (↓3.79)
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="label">近一年涨跌幅</div>
-            <div class="value up">+63.53%</div>
-            <div class="change" style="color:#9c9c9c;">起价 ¥85.80 → 终价 ¥140.31</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">一年最高价</div>
-            <div class="value up">¥166.88</div>
-            <div class="change" style="color:#9c9c9c;">区间高点</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">一年最低价</div>
-            <div class="value down">¥84.86</div>
-            <div class="change" style="color:#9c9c9c;">区间低点</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">日均成交量</div>
-            <div class="value">68.2<span style="font-size:13px;color:#9c9c9c;">万手</span></div>
-            <div class="change" style="color:#9c9c9c;">最新: 77.0万手</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">最新成交额</div>
-            <div class="value">110.12<span style="font-size:13px;color:#9c9c9c;">亿元</span></div>
-            <div class="change" style="color:#9c9c9c;">换手活跃</div>
-        </div>
+    <!-- Task 2 -->
+    <div class="task-card task2">
+      <div class="task-badge">Task 2</div>
+      <h2>股票技术分析报告</h2>
+      <div class="desc">
+        三一重工 & 平安集团行情数据诊断分析，计算 RSI、MACD、布林带、KDJ 
+        四大技术指标，生成可视化图表与综合分析报告。
+      </div>
+      <div class="tags">
+        <span class="tag">RSI</span>
+        <span class="tag">MACD</span>
+        <span class="tag">布林带</span>
+        <span class="tag">KDJ</span>
+        <span class="tag">Python</span>
+      </div>
+      <a href="Task2/技术分析报告.html" class="btn">查看分析报告 →</a>
     </div>
+  </div>
 
-    <div class="chart-container">
-        <div class="chart-title">日K线走势</div>
-        <div class="legend-info">
-            <div class="legend-item"><span class="legend-dot" style="background:#ef232a;"></span>阳线(收涨)</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#14b143;"></span>阴线(收跌)</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#f5a623;"></span>MA5</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#0984e3;"></span>MA10</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#a55eea;"></span>MA20</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#26de81;"></span>MA60</div>
-        </div>
-        <div id="klineChart"></div>
+  <!-- 技术指标概览 -->
+  <div class="feature-section">
+    <h3>本项目涵盖的技术指标</h3>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="ft-title">RSI 相对强弱指数</div>
+        <div class="ft-desc">衡量超买超卖，>70超买 <30超卖</div>
+      </div>
+      <div class="feature-item">
+        <div class="ft-title">MACD 异同移动平均线</div>
+        <div class="ft-desc">趋势跟踪，金叉买入死叉卖出</div>
+      </div>
+      <div class="feature-item">
+        <div class="ft-title">BOLL 布林带</div>
+        <div class="ft-desc">波动率通道，触及轨道判断回调</div>
+      </div>
+      <div class="feature-item">
+        <div class="ft-title">KDJ 随机指标</div>
+        <div class="ft-desc">短线振荡器，灵敏捕捉转折点</div>
+      </div>
+      <div class="feature-item">
+        <div class="ft-title">MA 移动平均线</div>
+        <div class="ft-desc">趋势判断，均线多头/空头排列</div>
+      </div>
+      <div class="feature-item">
+        <div class="ft-title">成交量分析</div>
+        <div class="ft-desc">量价配合，验证趋势可靠性</div>
+      </div>
     </div>
+  </div>
 
-    <div class="chart-container">
-        <div class="chart-title">成交量</div>
-        <div id="volChart"></div>
-    </div>
+  <div class="footer">
+    <div>数据仅供学习参考，不构成投资建议</div>
+    <a href="https://github.com/DSLiutt/ai-aquant-260704" class="repo-link" target="_blank">
+      GitHub 仓库 →
+    </a>
+  </div>
 
-    <div class="footer">数据来源: Tushare Pro · 仅供学习参考，不构成投资建议 · 生成时间: 2026-07-04 21:38</div>
-
-    <script>
-        var dates = ["2025-07-04", "2025-07-07", "2025-07-08", "2025-07-09", "2025-07-10", "2025-07-11", "2025-07-14", "2025-07-15", "2025-07-16", "2025-07-17", "2025-07-18", "2025-07-21", "2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-11", "2025-08-12", "2025-08-13", "2025-08-14", "2025-08-15", "2025-08-18", "2025-08-19", "2025-08-20", "2025-08-21", "2025-08-22", "2025-08-25", "2025-08-26", "2025-08-27", "2025-08-28", "2025-08-29", "2025-09-09", "2025-09-10", "2025-09-11", "2025-09-12", "2025-09-15", "2025-09-16", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-22", "2025-09-23", "2025-09-24", "2025-09-25", "2025-09-26", "2025-09-29", "2025-09-30", "2025-10-09", "2025-10-10", "2025-10-13", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-10-31", "2025-11-03", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-17", "2025-11-18", "2025-11-19", "2025-11-20", "2025-11-21", "2025-11-24", "2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-25", "2025-12-26", "2025-12-29", "2025-12-30", "2025-12-31", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-19", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-29", "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03"];
-        var klineData = [["2025-07-04", 86.0, 85.8, 84.86, 87.2], ["2025-07-07", 85.69, 85.48, 85.37, 86.86], ["2025-07-08", 85.49, 86.74, 85.18, 86.85], ["2025-07-09", 86.65, 85.85, 85.52, 86.86], ["2025-07-10", 85.61, 85.67, 85.5, 86.17], ["2025-07-11", 85.7, 88.16, 85.4, 89.34], ["2025-07-14", 88.3, 87.52, 87.47, 88.49], ["2025-07-15", 87.15, 87.89, 86.61, 87.95], ["2025-07-16", 87.73, 87.12, 86.77, 88.2], ["2025-07-17", 87.06, 88.79, 86.32, 89.0], ["2025-07-18", 88.75, 88.51, 87.93, 89.13], ["2025-07-21", 88.45, 89.02, 88.04, 89.52], ["2025-07-22", 88.7, 89.08, 88.5, 90.55], ["2025-07-23", 88.9, 89.39, 88.3, 90.19], ["2025-07-24", 89.1, 91.75, 89.0, 92.9], ["2025-07-25", 91.74, 93.47, 90.99, 93.68], ["2025-07-28", 93.64, 92.18, 91.96, 93.69], ["2025-07-29", 92.0, 92.17, 90.81, 92.63], ["2025-07-30", 91.7, 90.36, 89.74, 91.83], ["2025-07-31", 90.32, 89.5, 89.46, 92.75], ["2025-08-01", 89.2, 88.29, 88.02, 90.33], ["2025-08-04", 87.95, 90.07, 87.88, 90.63], ["2025-08-05", 89.85, 90.0, 89.58, 90.58], ["2025-08-06", 89.86, 90.78, 89.53, 91.0], ["2025-08-07", 90.7, 90.59, 89.75, 91.7], ["2025-08-08", 88.0, 86.66, 86.66, 88.5], ["2025-08-11", 86.69, 86.96, 86.22, 87.18], ["2025-08-12", 86.95, 88.52, 86.42, 90.1], ["2025-08-13", 88.01, 88.66, 88.0, 89.23], ["2025-08-14", 88.69, 89.46, 88.69, 92.58], ["2025-08-15", 89.0, 91.84, 88.48, 93.3], ["2025-08-18", 93.5, 92.31, 91.36, 95.17], ["2025-08-19", 91.67, 89.35, 89.35, 92.48], ["2025-08-20", 89.4, 92.28, 88.19, 92.49], ["2025-08-21", 92.3, 91.05, 90.8, 94.11], ["2025-08-22", 92.5, 103.97, 92.42, 105.0], ["2025-08-25", 106.0, 103.17, 101.1, 109.24], ["2025-08-26", 101.0, 100.93, 100.13, 102.57], ["2025-08-27", 102.2, 101.51, 100.59, 106.69], ["2025-08-28", 102.0, 119.22, 101.99, 119.22], ["2025-08-29", 114.0, 114.76, 112.26, 116.0], ["2025-09-09", 102.0, 102.99, 101.2, 108.65], ["2025-09-10", 103.0, 103.91, 102.13, 105.96], ["2025-09-11", 102.62, 110.28, 99.98, 112.8], ["2025-09-12", 109.28, 108.42, 108.01, 112.49], ["2025-09-15", 110.55, 108.66, 107.5, 112.55], ["2025-09-16", 109.0, 109.78, 108.09, 111.86], ["2025-09-17", 110.8, 117.39, 109.8, 120.8], ["2025-09-18", 119.98, 122.15, 116.35, 127.49], ["2025-09-19", 123.0, 121.34, 120.11, 127.4], ["2025-09-22", 120.54, 128.92, 119.05, 129.83], ["2025-09-23", 127.64, 128.51, 122.63, 129.33], ["2025-09-24", 126.88, 134.98, 126.23, 137.98], ["2025-09-25", 133.0, 134.11, 132.31, 137.8], ["2025-09-26", 132.71, 132.27, 131.2, 135.95], ["2025-09-29", 131.0, 136.02, 129.16, 136.02], ["2025-09-30", 138.5, 140.13, 136.6, 142.0], ["2025-10-09", 144.0, 138.91, 137.0, 153.0], ["2025-10-10", 134.87, 127.95, 127.17, 134.94], ["2025-10-13", 126.0, 136.47, 126.0, 136.48], ["2025-10-14", 136.96, 127.2, 125.8, 137.8], ["2025-10-15", 127.18, 129.56, 124.6, 129.73], ["2025-10-16", 127.8, 127.3, 126.6, 130.28], ["2025-10-17", 126.85, 121.98, 120.87, 127.32], ["2025-10-20", 124.1, 122.63, 121.69, 125.18], ["2025-10-21", 123.8, 127.19, 122.61, 127.85], ["2025-10-22", 125.42, 126.81, 123.81, 129.27], ["2025-10-23", 125.18, 128.3, 124.01, 128.5], ["2025-10-24", 130.3, 134.06, 128.9, 134.8], ["2025-10-27", 137.5, 134.5, 132.3, 137.5], ["2025-10-28", 133.0, 132.69, 132.0, 135.8], ["2025-10-29", 132.0, 133.0, 130.31, 134.53], ["2025-10-30", 133.0, 128.55, 128.51, 133.0], ["2025-10-31", 128.03, 124.18, 124.18, 128.7], ["2025-11-03", 122.0, 120.21, 117.55, 122.6], ["2025-11-04", 121.0, 119.88, 119.0, 122.66], ["2025-11-05", 116.9, 119.78, 116.5, 121.1], ["2025-11-06", 121.9, 124.85, 121.05, 125.99], ["2025-11-07", 122.93, 122.11, 122.05, 124.18], ["2025-11-10", 122.13, 120.01, 118.76, 122.95], ["2025-11-11", 120.6, 117.73, 117.53, 121.47], ["2025-11-12", 117.0, 119.63, 115.74, 119.8], ["2025-11-13", 118.99, 123.1, 117.8, 123.33], ["2025-11-14", 123.0, 118.18, 117.89, 125.5], ["2025-11-17", 116.82, 117.63, 116.51, 119.29], ["2025-11-18", 117.5, 117.96, 117.13, 120.18], ["2025-11-19", 117.99, 116.28, 115.51, 118.49], ["2025-11-20", 117.99, 116.78, 116.46, 118.29], ["2025-11-21", 113.86, 113.0, 113.0, 116.08], ["2025-11-24", 112.99, 111.51, 108.18, 113.5], ["2025-11-25", 112.5, 111.68, 111.37, 113.96], ["2025-11-26", 110.7, 112.71, 110.61, 113.9], ["2025-11-27", 113.8, 112.71, 112.56, 116.8], ["2025-11-28", 112.71, 113.6, 111.4, 114.11], ["2025-12-01", 113.4, 114.4, 112.6, 114.68], ["2025-12-02", 114.1, 113.0, 112.7, 114.19], ["2025-12-03", 112.8, 111.62, 111.13, 113.69], ["2025-12-04", 111.65, 114.73, 110.98, 114.73], ["2025-12-05", 114.0, 114.18, 112.5, 114.88], ["2025-12-08", 114.21, 117.2, 114.18, 118.0], ["2025-12-09", 115.58, 116.32, 115.51, 117.9], ["2025-12-10", 115.58, 116.31, 113.44, 116.59], ["2025-12-11", 116.53, 113.61, 113.5, 117.14], ["2025-12-12", 113.61, 116.8, 111.6, 117.42], ["2025-12-15", 115.15, 113.01, 113.0, 116.5], ["2025-12-16", 112.5, 110.7, 110.27, 113.35], ["2025-12-17", 110.82, 113.29, 110.13, 113.9], ["2025-12-18", 112.8, 112.8, 112.75, 115.72], ["2025-12-19", 113.2, 113.63, 113.0, 115.48], ["2025-12-22", 114.6, 120.45, 114.6, 121.44], ["2025-12-23", 120.5, 119.9, 119.02, 121.58], ["2025-12-24", 122.5, 123.41, 121.11, 124.38], ["2025-12-25", 123.0, 123.08, 122.66, 125.99], ["2025-12-26", 122.58, 122.1, 121.16, 124.79], ["2025-12-29", 123.0, 122.5, 122.02, 125.65], ["2025-12-30", 124.45, 125.28, 124.0, 126.69], ["2025-12-31", 125.99, 122.83, 122.4, 126.2], ["2026-01-05", 126.84, 129.95, 126.2, 130.17], ["2026-01-06", 129.0, 131.84, 128.77, 134.2], ["2026-01-07", 131.84, 129.98, 128.85, 132.82], ["2026-01-08", 128.95, 130.15, 128.91, 134.68], ["2026-01-09", 129.15, 128.88, 127.77, 130.01], ["2026-01-12", 128.52, 127.66, 126.68, 129.62], ["2026-01-13", 127.49, 123.63, 122.86, 128.15], ["2026-01-14", 123.51, 124.49, 123.5, 127.6], ["2026-01-15", 123.49, 124.44, 122.33, 125.5], ["2026-01-16", 127.5, 126.99, 124.88, 128.82], ["2026-01-19", 127.05, 125.29, 125.12, 128.5], ["2026-01-20", 125.0, 122.18, 121.81, 125.5], ["2026-01-21", 120.93, 127.19, 120.58, 128.89], ["2026-01-22", 128.98, 126.8, 125.57, 130.82], ["2026-01-23", 126.8, 124.96, 124.03, 127.37], ["2026-01-26", 124.01, 121.92, 121.9, 125.88], ["2026-01-27", 122.0, 124.05, 119.22, 125.74], ["2026-01-28", 124.99, 128.55, 124.99, 128.99], ["2026-01-29", 127.6, 122.4, 122.16, 127.81], ["2026-01-30", 121.33, 122.97, 120.07, 124.94], ["2026-02-02", 121.4, 117.06, 116.8, 122.59], ["2026-02-03", 118.69, 116.03, 113.46, 118.84], ["2026-02-04", 114.5, 114.84, 113.15, 114.99], ["2026-02-05", 112.99, 111.8, 110.39, 114.5], ["2026-02-06", 110.14, 112.7, 110.14, 114.6], ["2026-02-09", 114.8, 114.93, 113.7, 115.07], ["2026-02-10", 115.2, 116.2, 114.85, 116.9], ["2026-02-11", 114.0, 115.01, 113.5, 116.14], ["2026-02-12", 115.55, 116.58, 115.11, 117.18], ["2026-02-13", 116.23, 116.93, 115.56, 117.98], ["2026-02-24", 118.03, 115.82, 115.62, 118.18], ["2026-02-25", 117.0, 116.13, 115.85, 117.5], ["2026-02-26", 116.13, 116.65, 114.29, 117.23], ["2026-02-27", 115.03, 115.0, 114.32, 115.87], ["2026-03-02", 112.88, 112.53, 112.3, 114.2], ["2026-03-03", 113.23, 108.31, 107.69, 114.75], ["2026-03-04", 107.32, 106.69, 106.12, 109.7], ["2026-03-05", 108.6, 106.9, 106.09, 109.26], ["2026-03-06", 107.0, 106.5, 106.17, 108.34], ["2026-03-09", 103.97, 105.14, 101.63, 105.79], ["2026-03-10", 106.9, 107.28, 105.7, 107.75], ["2026-03-11", 107.23, 107.1, 107.0, 108.8], ["2026-03-12", 107.0, 106.01, 104.95, 108.55], ["2026-03-13", 105.02, 107.06, 104.5, 107.83], ["2026-03-16", 106.31, 108.6, 105.5, 110.32], ["2026-03-17", 108.54, 106.02, 105.99, 108.58], ["2026-03-18", 105.78, 106.6, 105.25, 106.88], ["2026-03-19", 105.01, 105.96, 104.51, 107.69], ["2026-03-20", 105.2, 102.18, 102.18, 105.72], ["2026-03-23", 100.01, 98.04, 97.4, 101.99], ["2026-03-24", 98.9, 99.25, 97.25, 99.37], ["2026-03-25", 99.67, 99.99, 99.28, 100.94], ["2026-03-26", 99.55, 96.88, 96.55, 99.7], ["2026-03-27", 96.0, 97.5, 95.87, 98.39], ["2026-03-30", 95.8, 95.83, 94.0, 96.19], ["2026-03-31", 95.8, 94.05, 94.0, 97.4], ["2026-04-01", 96.4, 96.33, 94.81, 96.7], ["2026-04-02", 95.5, 93.2, 92.51, 95.79], ["2026-04-03", 93.41, 91.78, 91.76, 93.94], ["2026-04-07", 91.5, 95.62, 91.2, 96.99], ["2026-04-08", 99.02, 101.18, 99.02, 101.54], ["2026-04-09", 99.4, 99.72, 99.2, 101.2], ["2026-04-10", 101.0, 101.01, 100.68, 102.79], ["2026-04-13", 99.85, 100.64, 99.72, 102.8], ["2026-04-14", 102.1, 101.52, 100.38, 102.28], ["2026-04-15", 102.05, 103.91, 101.8, 106.1], ["2026-04-16", 103.5, 104.18, 103.0, 105.0], ["2026-04-17", 103.82, 105.23, 103.27, 107.3], ["2026-04-20", 105.93, 107.96, 105.01, 108.6], ["2026-04-21", 107.33, 107.46, 105.68, 108.15], ["2026-04-22", 106.8, 107.87, 106.5, 108.08], ["2026-04-23", 108.88, 105.98, 105.2, 109.12], ["2026-04-24", 105.58, 110.96, 104.61, 113.25], ["2026-04-27", 113.25, 116.58, 112.6, 117.69], ["2026-04-28", 115.24, 114.0, 113.02, 117.64], ["2026-04-29", 113.35, 112.47, 109.78, 113.82], ["2026-04-30", 113.31, 118.73, 113.3, 119.88], ["2026-05-06", 122.0, 123.1, 121.74, 128.12], ["2026-05-07", 125.11, 125.34, 122.22, 127.48], ["2026-05-08", 122.9, 120.31, 120.05, 123.19], ["2026-05-11", 122.99, 122.52, 121.9, 124.57], ["2026-05-12", 124.44, 121.98, 120.0, 125.44], ["2026-05-13", 119.0, 121.86, 116.04, 122.5], ["2026-05-14", 121.92, 117.9, 117.0, 124.04], ["2026-05-15", 121.0, 119.02, 118.48, 125.0], ["2026-05-18", 117.4, 117.62, 115.6, 120.34], ["2026-05-19", 116.16, 118.82, 112.68, 118.88], ["2026-05-20", 118.0, 133.81, 117.5, 136.63], ["2026-05-21", 134.0, 127.22, 127.1, 137.63], ["2026-05-22", 129.33, 131.33, 126.5, 132.18], ["2026-05-25", 136.0, 156.0, 136.0, 157.6], ["2026-05-26", 150.73, 149.18, 145.5, 154.44], ["2026-05-27", 150.0, 146.22, 145.0, 153.52], ["2026-05-28", 146.0, 153.7, 146.0, 159.05], ["2026-05-29", 150.92, 139.91, 138.49, 152.38], ["2026-06-01", 139.76, 132.44, 132.04, 140.8], ["2026-06-02", 132.98, 132.48, 129.3, 135.5], ["2026-06-03", 132.0, 134.0, 131.85, 138.75], ["2026-06-04", 131.0, 134.88, 130.0, 137.57], ["2026-06-05", 131.0, 127.4, 126.7, 134.75], ["2026-06-08", 120.0, 121.92, 120.0, 124.28], ["2026-06-09", 123.5, 127.3, 120.89, 128.03], ["2026-06-10", 125.0, 125.34, 124.5, 131.18], ["2026-06-11", 124.0, 127.4, 123.01, 129.08], ["2026-06-12", 131.64, 124.88, 124.37, 134.87], ["2026-06-15", 128.59, 130.52, 124.89, 131.0], ["2026-06-16", 131.0, 130.14, 127.93, 134.34], ["2026-06-17", 127.91, 134.7, 126.68, 134.88], ["2026-06-18", 136.11, 140.7, 132.88, 144.63], ["2026-06-22", 140.78, 145.59, 140.0, 148.0], ["2026-06-23", 143.58, 141.7, 139.6, 148.3], ["2026-06-24", 141.5, 151.53, 141.32, 156.35], ["2026-06-25", 152.0, 156.86, 151.0, 158.66], ["2026-06-26", 153.7, 148.76, 146.5, 156.22], ["2026-06-29", 147.8, 151.0, 141.0, 152.99], ["2026-06-30", 152.05, 158.82, 150.0, 160.66], ["2026-07-01", 160.19, 154.48, 152.31, 166.88], ["2026-07-02", 146.5, 144.1, 141.26, 151.69], ["2026-07-03", 144.89, 140.31, 140.2, 146.45]];
-        var volData = [{"value": 252257.45, "itemStyle": {"color": "#14b143"}}, {"value": 135349.28, "itemStyle": {"color": "#14b143"}}, {"value": 217668.48, "itemStyle": {"color": "#ef232a"}}, {"value": 183102.0, "itemStyle": {"color": "#14b143"}}, {"value": 175639.46, "itemStyle": {"color": "#ef232a"}}, {"value": 469922.38, "itemStyle": {"color": "#ef232a"}}, {"value": 189831.36, "itemStyle": {"color": "#14b143"}}, {"value": 206173.16, "itemStyle": {"color": "#ef232a"}}, {"value": 196708.51, "itemStyle": {"color": "#14b143"}}, {"value": 287922.16, "itemStyle": {"color": "#ef232a"}}, {"value": 219959.93, "itemStyle": {"color": "#14b143"}}, {"value": 222719.15, "itemStyle": {"color": "#ef232a"}}, {"value": 297420.68, "itemStyle": {"color": "#ef232a"}}, {"value": 316549.41, "itemStyle": {"color": "#ef232a"}}, {"value": 522324.53, "itemStyle": {"color": "#ef232a"}}, {"value": 442124.79, "itemStyle": {"color": "#ef232a"}}, {"value": 342640.05, "itemStyle": {"color": "#14b143"}}, {"value": 294142.08, "itemStyle": {"color": "#ef232a"}}, {"value": 310018.59, "itemStyle": {"color": "#14b143"}}, {"value": 461988.52, "itemStyle": {"color": "#14b143"}}, {"value": 274140.33, "itemStyle": {"color": "#14b143"}}, {"value": 286057.6, "itemStyle": {"color": "#ef232a"}}, {"value": 195679.4, "itemStyle": {"color": "#ef232a"}}, {"value": 267797.87, "itemStyle": {"color": "#ef232a"}}, {"value": 315259.94, "itemStyle": {"color": "#14b143"}}, {"value": 584730.5, "itemStyle": {"color": "#14b143"}}, {"value": 279193.14, "itemStyle": {"color": "#ef232a"}}, {"value": 551552.4, "itemStyle": {"color": "#ef232a"}}, {"value": 384304.42, "itemStyle": {"color": "#ef232a"}}, {"value": 741492.26, "itemStyle": {"color": "#ef232a"}}, {"value": 690499.46, "itemStyle": {"color": "#ef232a"}}, {"value": 833423.13, "itemStyle": {"color": "#14b143"}}, {"value": 744652.14, "itemStyle": {"color": "#14b143"}}, {"value": 858745.56, "itemStyle": {"color": "#ef232a"}}, {"value": 606826.05, "itemStyle": {"color": "#14b143"}}, {"value": 2061948.09, "itemStyle": {"color": "#ef232a"}}, {"value": 1760636.98, "itemStyle": {"color": "#14b143"}}, {"value": 856074.09, "itemStyle": {"color": "#14b143"}}, {"value": 1422620.71, "itemStyle": {"color": "#14b143"}}, {"value": 2420325.11, "itemStyle": {"color": "#ef232a"}}, {"value": 1639670.37, "itemStyle": {"color": "#ef232a"}}, {"value": 1574695.7, "itemStyle": {"color": "#ef232a"}}, {"value": 1039925.7, "itemStyle": {"color": "#ef232a"}}, {"value": 1467501.66, "itemStyle": {"color": "#ef232a"}}, {"value": 1159022.04, "itemStyle": {"color": "#14b143"}}, {"value": 946836.18, "itemStyle": {"color": "#14b143"}}, {"value": 866259.24, "itemStyle": {"color": "#ef232a"}}, {"value": 1528475.61, "itemStyle": {"color": "#ef232a"}}, {"value": 1931567.78, "itemStyle": {"color": "#ef232a"}}, {"value": 1449106.23, "itemStyle": {"color": "#14b143"}}, {"value": 1588281.47, "itemStyle": {"color": "#ef232a"}}, {"value": 1441273.53, "itemStyle": {"color": "#ef232a"}}, {"value": 1460947.53, "itemStyle": {"color": "#ef232a"}}, {"value": 1032583.21, "itemStyle": {"color": "#ef232a"}}, {"value": 912445.19, "itemStyle": {"color": "#14b143"}}, {"value": 1027207.23, "itemStyle": {"color": "#ef232a"}}, {"value": 986229.0, "itemStyle": {"color": "#ef232a"}}, {"value": 1662841.1, "itemStyle": {"color": "#14b143"}}, {"value": 1617420.76, "itemStyle": {"color": "#14b143"}}, {"value": 1402994.86, "itemStyle": {"color": "#ef232a"}}, {"value": 1321004.03, "itemStyle": {"color": "#14b143"}}, {"value": 807987.26, "itemStyle": {"color": "#ef232a"}}, {"value": 612310.62, "itemStyle": {"color": "#14b143"}}, {"value": 820528.98, "itemStyle": {"color": "#14b143"}}, {"value": 571239.35, "itemStyle": {"color": "#14b143"}}, {"value": 784150.88, "itemStyle": {"color": "#ef232a"}}, {"value": 653954.11, "itemStyle": {"color": "#ef232a"}}, {"value": 634264.02, "itemStyle": {"color": "#ef232a"}}, {"value": 1024466.21, "itemStyle": {"color": "#ef232a"}}, {"value": 1012643.04, "itemStyle": {"color": "#14b143"}}, {"value": 695189.45, "itemStyle": {"color": "#14b143"}}, {"value": 688460.74, "itemStyle": {"color": "#ef232a"}}, {"value": 692863.97, "itemStyle": {"color": "#14b143"}}, {"value": 691668.89, "itemStyle": {"color": "#14b143"}}, {"value": 747709.27, "itemStyle": {"color": "#14b143"}}, {"value": 477384.17, "itemStyle": {"color": "#14b143"}}, {"value": 485016.0, "itemStyle": {"color": "#ef232a"}}, {"value": 731507.65, "itemStyle": {"color": "#ef232a"}}, {"value": 382292.14, "itemStyle": {"color": "#14b143"}}, {"value": 395832.71, "itemStyle": {"color": "#14b143"}}, {"value": 342530.08, "itemStyle": {"color": "#14b143"}}, {"value": 457015.52, "itemStyle": {"color": "#ef232a"}}, {"value": 549888.53, "itemStyle": {"color": "#ef232a"}}, {"value": 775293.52, "itemStyle": {"color": "#14b143"}}, {"value": 421773.41, "itemStyle": {"color": "#ef232a"}}, {"value": 473915.08, "itemStyle": {"color": "#ef232a"}}, {"value": 415119.56, "itemStyle": {"color": "#14b143"}}, {"value": 344702.85, "itemStyle": {"color": "#14b143"}}, {"value": 461358.62, "itemStyle": {"color": "#14b143"}}, {"value": 557908.63, "itemStyle": {"color": "#14b143"}}, {"value": 407223.82, "itemStyle": {"color": "#14b143"}}, {"value": 419553.57, "itemStyle": {"color": "#ef232a"}}, {"value": 523431.12, "itemStyle": {"color": "#14b143"}}, {"value": 308663.84, "itemStyle": {"color": "#ef232a"}}, {"value": 327640.04, "itemStyle": {"color": "#ef232a"}}, {"value": 237771.82, "itemStyle": {"color": "#14b143"}}, {"value": 245413.59, "itemStyle": {"color": "#14b143"}}, {"value": 387551.96, "itemStyle": {"color": "#ef232a"}}, {"value": 352653.66, "itemStyle": {"color": "#ef232a"}}, {"value": 508359.77, "itemStyle": {"color": "#ef232a"}}, {"value": 371384.45, "itemStyle": {"color": "#ef232a"}}, {"value": 315714.73, "itemStyle": {"color": "#ef232a"}}, {"value": 303108.96, "itemStyle": {"color": "#14b143"}}, {"value": 584998.04, "itemStyle": {"color": "#ef232a"}}, {"value": 342417.46, "itemStyle": {"color": "#14b143"}}, {"value": 323379.53, "itemStyle": {"color": "#14b143"}}, {"value": 343892.72, "itemStyle": {"color": "#ef232a"}}, {"value": 314700.29, "itemStyle": {"color": "#ef232a"}}, {"value": 272612.5, "itemStyle": {"color": "#ef232a"}}, {"value": 810113.69, "itemStyle": {"color": "#ef232a"}}, {"value": 483601.42, "itemStyle": {"color": "#14b143"}}, {"value": 629560.98, "itemStyle": {"color": "#ef232a"}}, {"value": 471809.58, "itemStyle": {"color": "#ef232a"}}, {"value": 402397.99, "itemStyle": {"color": "#14b143"}}, {"value": 506831.61, "itemStyle": {"color": "#14b143"}}, {"value": 604958.31, "itemStyle": {"color": "#ef232a"}}, {"value": 411586.85, "itemStyle": {"color": "#14b143"}}, {"value": 911394.04, "itemStyle": {"color": "#ef232a"}}, {"value": 730696.95, "itemStyle": {"color": "#ef232a"}}, {"value": 598040.86, "itemStyle": {"color": "#14b143"}}, {"value": 616918.81, "itemStyle": {"color": "#ef232a"}}, {"value": 511274.88, "itemStyle": {"color": "#14b143"}}, {"value": 563935.64, "itemStyle": {"color": "#14b143"}}, {"value": 652072.8, "itemStyle": {"color": "#14b143"}}, {"value": 649683.91, "itemStyle": {"color": "#ef232a"}}, {"value": 556604.23, "itemStyle": {"color": "#ef232a"}}, {"value": 756512.57, "itemStyle": {"color": "#14b143"}}, {"value": 477537.02, "itemStyle": {"color": "#14b143"}}, {"value": 508693.59, "itemStyle": {"color": "#14b143"}}, {"value": 970525.21, "itemStyle": {"color": "#ef232a"}}, {"value": 648094.63, "itemStyle": {"color": "#14b143"}}, {"value": 490631.04, "itemStyle": {"color": "#14b143"}}, {"value": 502566.5, "itemStyle": {"color": "#14b143"}}, {"value": 655261.57, "itemStyle": {"color": "#ef232a"}}, {"value": 994583.26, "itemStyle": {"color": "#ef232a"}}, {"value": 715649.35, "itemStyle": {"color": "#14b143"}}, {"value": 527719.06, "itemStyle": {"color": "#ef232a"}}, {"value": 596690.81, "itemStyle": {"color": "#14b143"}}, {"value": 561769.52, "itemStyle": {"color": "#14b143"}}, {"value": 351393.47, "itemStyle": {"color": "#ef232a"}}, {"value": 446447.65, "itemStyle": {"color": "#14b143"}}, {"value": 408226.91, "itemStyle": {"color": "#ef232a"}}, {"value": 321018.1, "itemStyle": {"color": "#ef232a"}}, {"value": 340436.51, "itemStyle": {"color": "#ef232a"}}, {"value": 345336.73, "itemStyle": {"color": "#ef232a"}}, {"value": 333622.54, "itemStyle": {"color": "#ef232a"}}, {"value": 343687.4, "itemStyle": {"color": "#ef232a"}}, {"value": 276155.68, "itemStyle": {"color": "#14b143"}}, {"value": 275528.56, "itemStyle": {"color": "#14b143"}}, {"value": 327021.83, "itemStyle": {"color": "#ef232a"}}, {"value": 279308.78, "itemStyle": {"color": "#14b143"}}, {"value": 349784.75, "itemStyle": {"color": "#14b143"}}, {"value": 540987.0, "itemStyle": {"color": "#14b143"}}, {"value": 322749.58, "itemStyle": {"color": "#14b143"}}, {"value": 353531.81, "itemStyle": {"color": "#14b143"}}, {"value": 340486.16, "itemStyle": {"color": "#14b143"}}, {"value": 393559.67, "itemStyle": {"color": "#ef232a"}}, {"value": 318321.9, "itemStyle": {"color": "#ef232a"}}, {"value": 279982.97, "itemStyle": {"color": "#14b143"}}, {"value": 288819.77, "itemStyle": {"color": "#14b143"}}, {"value": 341633.26, "itemStyle": {"color": "#ef232a"}}, {"value": 422554.97, "itemStyle": {"color": "#ef232a"}}, {"value": 295718.04, "itemStyle": {"color": "#14b143"}}, {"value": 263345.92, "itemStyle": {"color": "#ef232a"}}, {"value": 378655.95, "itemStyle": {"color": "#ef232a"}}, {"value": 381294.75, "itemStyle": {"color": "#14b143"}}, {"value": 506671.26, "itemStyle": {"color": "#14b143"}}, {"value": 336803.26, "itemStyle": {"color": "#ef232a"}}, {"value": 321306.43, "itemStyle": {"color": "#ef232a"}}, {"value": 313198.89, "itemStyle": {"color": "#14b143"}}, {"value": 280875.27, "itemStyle": {"color": "#ef232a"}}, {"value": 328870.03, "itemStyle": {"color": "#ef232a"}}, {"value": 293839.03, "itemStyle": {"color": "#14b143"}}, {"value": 325648.08, "itemStyle": {"color": "#14b143"}}, {"value": 293828.32, "itemStyle": {"color": "#14b143"}}, {"value": 216461.63, "itemStyle": {"color": "#14b143"}}, {"value": 458242.31, "itemStyle": {"color": "#ef232a"}}, {"value": 544697.12, "itemStyle": {"color": "#ef232a"}}, {"value": 310716.53, "itemStyle": {"color": "#ef232a"}}, {"value": 406305.14, "itemStyle": {"color": "#ef232a"}}, {"value": 351885.22, "itemStyle": {"color": "#ef232a"}}, {"value": 370910.59, "itemStyle": {"color": "#14b143"}}, {"value": 704839.0, "itemStyle": {"color": "#ef232a"}}, {"value": 393721.35, "itemStyle": {"color": "#ef232a"}}, {"value": 503755.27, "itemStyle": {"color": "#ef232a"}}, {"value": 547702.62, "itemStyle": {"color": "#ef232a"}}, {"value": 372584.25, "itemStyle": {"color": "#ef232a"}}, {"value": 375216.74, "itemStyle": {"color": "#ef232a"}}, {"value": 441491.01, "itemStyle": {"color": "#14b143"}}, {"value": 910703.63, "itemStyle": {"color": "#ef232a"}}, {"value": 970295.86, "itemStyle": {"color": "#ef232a"}}, {"value": 625007.3, "itemStyle": {"color": "#14b143"}}, {"value": 514882.54, "itemStyle": {"color": "#14b143"}}, {"value": 1018382.85, "itemStyle": {"color": "#ef232a"}}, {"value": 1292940.51, "itemStyle": {"color": "#ef232a"}}, {"value": 842774.03, "itemStyle": {"color": "#ef232a"}}, {"value": 708618.1, "itemStyle": {"color": "#14b143"}}, {"value": 814859.72, "itemStyle": {"color": "#14b143"}}, {"value": 817732.34, "itemStyle": {"color": "#14b143"}}, {"value": 954951.48, "itemStyle": {"color": "#ef232a"}}, {"value": 790650.15, "itemStyle": {"color": "#14b143"}}, {"value": 1328100.54, "itemStyle": {"color": "#14b143"}}, {"value": 748969.19, "itemStyle": {"color": "#ef232a"}}, {"value": 840269.78, "itemStyle": {"color": "#ef232a"}}, {"value": 2248800.56, "itemStyle": {"color": "#ef232a"}}, {"value": 1546776.71, "itemStyle": {"color": "#14b143"}}, {"value": 1199477.88, "itemStyle": {"color": "#ef232a"}}, {"value": 2521802.26, "itemStyle": {"color": "#ef232a"}}, {"value": 1799242.41, "itemStyle": {"color": "#14b143"}}, {"value": 1234983.75, "itemStyle": {"color": "#14b143"}}, {"value": 1608231.75, "itemStyle": {"color": "#ef232a"}}, {"value": 1536812.64, "itemStyle": {"color": "#14b143"}}, {"value": 1008849.14, "itemStyle": {"color": "#14b143"}}, {"value": 923688.2, "itemStyle": {"color": "#14b143"}}, {"value": 992127.45, "itemStyle": {"color": "#ef232a"}}, {"value": 778526.88, "itemStyle": {"color": "#ef232a"}}, {"value": 934574.33, "itemStyle": {"color": "#14b143"}}, {"value": 781225.59, "itemStyle": {"color": "#ef232a"}}, {"value": 769662.77, "itemStyle": {"color": "#ef232a"}}, {"value": 669094.14, "itemStyle": {"color": "#ef232a"}}, {"value": 626275.99, "itemStyle": {"color": "#ef232a"}}, {"value": 817437.29, "itemStyle": {"color": "#14b143"}}, {"value": 728604.09, "itemStyle": {"color": "#ef232a"}}, {"value": 745583.01, "itemStyle": {"color": "#14b143"}}, {"value": 963562.12, "itemStyle": {"color": "#ef232a"}}, {"value": 1244937.14, "itemStyle": {"color": "#ef232a"}}, {"value": 1060960.58, "itemStyle": {"color": "#ef232a"}}, {"value": 918201.09, "itemStyle": {"color": "#14b143"}}, {"value": 1411623.83, "itemStyle": {"color": "#ef232a"}}, {"value": 1186102.37, "itemStyle": {"color": "#ef232a"}}, {"value": 1076155.43, "itemStyle": {"color": "#14b143"}}, {"value": 1027401.01, "itemStyle": {"color": "#ef232a"}}, {"value": 1066795.41, "itemStyle": {"color": "#ef232a"}}, {"value": 1146777.18, "itemStyle": {"color": "#14b143"}}, {"value": 949023.64, "itemStyle": {"color": "#14b143"}}, {"value": 770411.78, "itemStyle": {"color": "#14b143"}}];
-        var ma5 = [null, null, null, null, 85.91, 86.38, 86.79, 87.02, 87.27, 87.9, 87.97, 88.27, 88.5, 88.96, 89.55, 90.54, 91.17, 91.79, 91.99, 91.54, 90.5, 90.08, 89.64, 89.73, 89.95, 89.62, 89.0, 88.7, 88.28, 88.05, 89.09, 90.16, 90.32, 91.05, 91.37, 93.79, 95.96, 98.28, 100.13, 105.76, 107.92, 107.88, 108.48, 110.23, 108.07, 106.85, 108.21, 110.91, 113.28, 115.86, 119.92, 123.66, 127.18, 129.57, 131.76, 133.18, 135.5, 136.29, 135.06, 135.9, 134.13, 132.02, 129.7, 128.5, 125.73, 125.73, 125.18, 125.38, 127.8, 130.17, 131.27, 132.51, 132.56, 130.58, 127.73, 125.16, 122.52, 121.78, 121.37, 121.33, 120.9, 120.87, 120.52, 119.73, 119.25, 119.3, 118.63, 117.37, 116.33, 115.11, 113.85, 113.14, 112.32, 112.44, 113.02, 113.28, 113.07, 113.47, 113.59, 114.15, 114.81, 115.75, 115.52, 116.05, 115.21, 114.09, 113.48, 113.32, 112.69, 114.17, 116.01, 118.04, 120.09, 121.79, 122.2, 123.27, 123.16, 124.53, 126.48, 127.98, 128.95, 130.16, 129.7, 128.06, 126.96, 125.82, 125.44, 124.97, 124.68, 125.22, 125.69, 125.28, 124.61, 124.98, 125.26, 124.38, 123.98, 123.01, 121.4, 118.66, 116.54, 114.49, 114.06, 114.09, 114.13, 115.08, 115.93, 116.11, 116.09, 116.42, 116.11, 115.23, 113.72, 111.84, 109.89, 108.19, 106.71, 106.5, 106.58, 106.41, 106.52, 107.21, 106.96, 106.86, 106.85, 105.87, 103.76, 102.41, 101.08, 99.27, 98.33, 97.89, 96.85, 96.12, 95.38, 94.24, 94.2, 95.62, 96.3, 97.86, 99.63, 100.81, 101.36, 102.25, 103.1, 104.56, 105.75, 106.54, 106.9, 108.05, 109.77, 111.08, 112.0, 114.55, 116.98, 118.73, 119.99, 122.0, 122.65, 122.4, 120.91, 120.66, 119.68, 119.04, 121.43, 123.3, 125.76, 133.44, 139.51, 141.99, 147.29, 149.0, 144.29, 140.95, 138.51, 134.74, 132.24, 130.14, 129.1, 127.37, 125.87, 125.37, 127.09, 127.66, 129.53, 132.19, 136.33, 138.57, 142.84, 147.28, 148.89, 149.97, 153.39, 153.98, 151.43, 149.74];
-        var ma10 = [null, null, null, null, null, null, null, null, null, 86.9, 87.17, 87.53, 87.76, 88.11, 88.72, 89.25, 89.72, 90.15, 90.47, 90.54, 90.52, 90.63, 90.72, 90.86, 90.74, 90.06, 89.54, 89.17, 89.0, 89.0, 89.35, 89.58, 89.51, 89.66, 89.71, 91.44, 93.06, 94.3, 95.59, 98.56, 100.86, 101.92, 103.38, 105.18, 106.92, 107.38, 108.05, 109.69, 111.76, 111.97, 113.38, 115.94, 119.04, 121.43, 123.81, 126.55, 129.58, 131.73, 132.31, 133.83, 133.66, 133.76, 132.99, 131.78, 130.81, 129.93, 128.6, 127.54, 128.15, 127.95, 128.5, 128.85, 128.97, 129.19, 128.95, 128.22, 127.52, 127.17, 125.97, 124.53, 123.03, 121.69, 121.15, 120.55, 120.29, 120.1, 119.75, 118.94, 118.03, 117.18, 116.58, 115.88, 114.84, 114.39, 114.06, 113.57, 113.1, 112.9, 113.01, 113.58, 114.05, 114.41, 114.5, 114.82, 114.68, 114.45, 114.61, 114.42, 114.37, 114.69, 115.05, 115.76, 116.71, 117.24, 118.19, 119.64, 120.6, 122.31, 124.13, 125.09, 126.11, 126.66, 127.12, 127.27, 127.47, 127.38, 127.8, 127.33, 126.37, 126.09, 125.75, 125.36, 124.79, 124.83, 125.24, 125.03, 124.63, 123.81, 123.19, 121.96, 120.46, 119.23, 118.53, 117.75, 116.39, 115.81, 115.21, 115.08, 115.09, 115.28, 115.59, 115.58, 114.92, 113.96, 113.15, 112.15, 110.97, 110.11, 109.21, 108.15, 107.35, 106.96, 106.73, 106.72, 106.63, 106.2, 105.48, 104.68, 103.97, 103.06, 102.1, 100.83, 99.63, 98.6, 97.33, 96.28, 96.04, 96.24, 96.21, 96.62, 96.94, 97.5, 98.49, 99.28, 100.48, 102.1, 103.28, 103.95, 104.58, 105.57, 107.17, 108.41, 109.27, 110.72, 112.51, 114.25, 115.53, 117.0, 118.6, 119.69, 119.82, 120.32, 120.84, 120.85, 121.92, 122.11, 123.21, 126.56, 129.28, 131.71, 135.29, 137.38, 138.86, 140.23, 140.25, 141.01, 140.62, 137.21, 135.02, 132.94, 130.31, 128.8, 128.61, 128.38, 128.45, 129.03, 130.85, 132.83, 135.25, 138.4, 140.54, 143.15, 145.98, 148.41, 149.35, 149.31];
-        var ma20 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 88.72, 88.85, 89.08, 89.24, 89.49, 89.73, 89.66, 89.63, 89.66, 89.74, 89.77, 89.94, 90.1, 90.12, 90.26, 90.22, 90.75, 91.3, 91.74, 92.29, 93.78, 95.1, 95.75, 96.45, 97.42, 98.31, 99.41, 100.55, 102.0, 103.67, 105.27, 107.12, 108.93, 111.21, 113.3, 115.36, 116.97, 118.81, 120.71, 122.03, 122.9, 123.52, 124.85, 126.02, 126.6, 127.31, 128.24, 129.09, 129.64, 130.23, 130.89, 131.08, 131.3, 130.98, 130.49, 129.88, 129.07, 128.06, 127.35, 127.06, 126.24, 125.77, 125.27, 125.06, 124.87, 124.62, 124.16, 123.63, 123.06, 122.0, 120.85, 119.8, 118.79, 118.0, 117.47, 117.18, 116.83, 116.42, 115.92, 115.52, 115.38, 115.31, 115.15, 114.67, 114.6, 114.37, 114.01, 113.86, 113.66, 113.69, 114.14, 114.55, 115.08, 115.6, 116.03, 116.43, 117.05, 117.61, 118.37, 119.25, 119.89, 120.58, 121.21, 121.91, 122.25, 122.83, 123.51, 124.2, 124.82, 125.25, 125.59, 125.93, 126.01, 125.95, 126.05, 126.35, 126.21, 126.22, 125.57, 124.78, 124.02, 123.11, 122.3, 121.66, 121.29, 120.82, 120.42, 119.92, 119.45, 119.14, 118.62, 118.03, 117.41, 116.72, 115.86, 114.77, 113.98, 113.09, 112.6, 112.15, 111.71, 111.47, 111.27, 110.82, 110.34, 109.89, 109.17, 108.23, 107.4, 106.59, 105.6, 104.73, 103.89, 103.18, 102.66, 101.98, 101.24, 100.76, 100.46, 100.09, 99.84, 99.52, 99.17, 99.06, 98.94, 98.9, 99.19, 99.66, 100.09, 100.39, 101.1, 102.05, 102.96, 103.88, 105.0, 106.5, 108.17, 109.41, 110.47, 111.59, 112.63, 113.49, 114.37, 115.05, 115.79, 117.21, 118.18, 119.37, 121.78, 123.94, 125.7, 127.56, 128.85, 129.85, 130.54, 131.08, 131.56, 131.91, 131.88, 132.15, 132.32, 132.8, 133.09, 133.74, 134.3, 134.35, 135.02, 135.73, 135.02, 135.14, 135.67, 135.42, 135.98, 137.3, 138.4, 138.9, 139.17];
-        var ma60 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 101.8, 102.49, 103.22, 103.9, 104.5, 105.12, 105.77, 106.42, 107.1, 107.88, 108.64, 109.38, 110.11, 110.77, 111.35, 111.82, 112.26, 112.72, 113.27, 113.8, 114.31, 114.8, 115.29, 115.84, 116.3, 116.75, 117.27, 117.76, 118.23, 118.64, 119.0, 119.33, 119.67, 120.06, 120.42, 120.81, 120.96, 121.1, 121.33, 121.54, 121.51, 121.53, 121.75, 121.92, 122.02, 122.1, 122.13, 122.19, 122.12, 121.97, 121.96, 121.81, 121.72, 121.53, 121.33, 121.16, 120.98, 120.7, 120.55, 120.61, 120.5, 120.55, 120.54, 120.55, 120.57, 120.61, 120.56, 120.56, 120.51, 120.31, 120.19, 120.09, 119.96, 119.85, 119.85, 119.99, 120.03, 120.08, 119.95, 119.85, 119.77, 119.67, 119.55, 119.41, 119.38, 119.34, 119.31, 119.33, 119.31, 119.36, 119.45, 119.5, 119.5, 119.43, 119.31, 119.19, 119.08, 118.97, 118.85, 118.73, 118.54, 118.39, 118.26, 118.13, 117.96, 117.84, 117.7, 117.45, 117.22, 117.0, 116.6, 116.23, 115.77, 115.29, 114.86, 114.37, 113.81, 113.36, 112.88, 112.34, 111.86, 111.37, 110.91, 110.51, 110.19, 109.87, 109.59, 109.27, 108.98, 108.71, 108.44, 108.27, 108.09, 107.93, 107.84, 107.75, 107.8, 107.75, 107.84, 107.94, 108.06, 108.16, 108.27, 108.31, 108.36, 108.67, 108.85, 109.09, 109.76, 110.31, 110.8, 111.44, 111.9, 112.3, 112.73, 113.18, 113.66, 114.03, 114.27, 114.61, 114.93, 115.27, 115.54, 115.95, 116.34, 116.82, 117.46, 118.26, 118.96, 119.82, 120.82, 121.68, 122.6, 123.68, 124.64, 125.49, 126.3];
-
-        // K线图
-        var klineChart = echarts.init(document.getElementById('klineChart'));
-        var klineOption = {
-            backgroundColor: 'transparent',
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'cross' },
-                backgroundColor: 'rgba(26,26,46,0.9)',
-                borderColor: '#333',
-                textStyle: { color: '#fff', fontSize: 12 },
-                formatter: function(params) {
-                    var d = params[0].axisValue;
-                    var html = '<div style="font-weight:600;margin-bottom:4px;">' + d + '</div>';
-                    var k;
-                    params.forEach(function(p) {
-                        if (p.seriesName === '日K') {
-                            k = p.data.slice(1);
-                            var color = k[1] >= k[0] ? '#ef232a' : '#14b143';
-                            html += '<div style="color:' + color + '">开 ' + k[0].toFixed(2) + '</div>';
-                            html += '<div style="color:' + color + '">收 ' + k[1].toFixed(2) + '</div>';
-                            html += '<div style="color:#aaa">低 ' + k[2].toFixed(2) + '</div>';
-                            html += '<div style="color:#aaa">高 ' + k[3].toFixed(2) + '</div>';
-                        } else if (p.value !== null && p.value !== undefined) {
-                            html += '<div><span style="color:' + p.color + '">●</span> ' + p.seriesName + ': ' + p.value.toFixed(2) + '</div>';
-                        }
-                    });
-                    return html;
-                }
-            },
-            grid: [{ left: '6%', right: '3%', top: '4%', height: '88%' }],
-            xAxis: {
-                type: 'category',
-                data: dates,
-                boundaryGap: true,
-                axisLine: { lineStyle: { color: '#dfe4ea' } },
-                axisLabel: { color: '#9c9c9c', fontSize: 11 },
-                splitLine: { show: false }
-            },
-            yAxis: {
-                type: 'value',
-                scale: true,
-                axisLine: { show: false },
-                axisLabel: { color: '#9c9c9c', fontSize: 11, formatter: function(v) { return '¥' + v.toFixed(0); } },
-                splitLine: { lineStyle: { color: '#f0f0f0' } }
-            },
-            dataZoom: [
-                { type: 'inside', start: 0, end: 100 },
-                { type: 'slider', start: 0, end: 100, height: 20, bottom: 5, borderColor: '#e0e0e0', fillerColor: 'rgba(9,132,227,0.1)', handleStyle: { color: '#0984e3' } }
-            ],
-            series: [
-                {
-                    name: '日K',
-                    type: 'candlestick',
-                    data: klineData,
-                    itemStyle: {
-                        color: '#ef232a',
-                        color0: '#14b143',
-                        borderColor: '#ef232a',
-                        borderColor0: '#14b143'
-                    }
-                },
-                { name: 'MA5', type: 'line', data: ma5, smooth: true, symbol: 'none', lineStyle: { color: '#f5a623', width: 1.5 } },
-                { name: 'MA10', type: 'line', data: ma10, smooth: true, symbol: 'none', lineStyle: { color: '#0984e3', width: 1.5 } },
-                { name: 'MA20', type: 'line', data: ma20, smooth: true, symbol: 'none', lineStyle: { color: '#a55eea', width: 1.5 } },
-                { name: 'MA60', type: 'line', data: ma60, smooth: true, symbol: 'none', lineStyle: { color: '#26de81', width: 1.5 } }
-            ]
-        };
-        klineChart.setOption(klineOption);
-
-        // 成交量图
-        var volChart = echarts.init(document.getElementById('volChart'));
-        var volOption = {
-            backgroundColor: 'transparent',
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                backgroundColor: 'rgba(26,26,46,0.9)',
-                borderColor: '#333',
-                textStyle: { color: '#fff', fontSize: 12 },
-                formatter: function(params) {
-                    var d = params[0].axisValue;
-                    var v = params[0].data.value;
-                    return '<div style="font-weight:600;">' + d + '</div><div>成交量: ' + (v / 10000).toFixed(1) + ' 万手</div>';
-                }
-            },
-            grid: [{ left: '6%', right: '3%', top: '8%', height: '70%' }],
-            xAxis: {
-                type: 'category',
-                data: dates,
-                boundaryGap: true,
-                axisLine: { lineStyle: { color: '#dfe4ea' } },
-                axisLabel: { color: '#9c9c9c', fontSize: 11 },
-                splitLine: { show: false }
-            },
-            yAxis: {
-                type: 'value',
-                axisLine: { show: false },
-                axisLabel: {
-                    color: '#9c9c9c', fontSize: 11,
-                    formatter: function(v) { return (v / 10000).toFixed(0) + '万'; }
-                },
-                splitLine: { lineStyle: { color: '#f0f0f0' } }
-            },
-            dataZoom: [
-                { type: 'inside', start: 0, end: 100 },
-                { type: 'slider', start: 0, end: 100, height: 20, bottom: 5, borderColor: '#e0e0e0', fillerColor: 'rgba(9,132,227,0.1)', handleStyle: { color: '#0984e3' } }
-            ],
-            series: [{
-                name: '成交量',
-                type: 'bar',
-                data: volData,
-                barWidth: '60%'
-            }]
-        };
-        volChart.setOption(volOption);
-
-        // 联动
-        echarts.connect([klineChart, volChart]);
-
-        // 响应式
-        window.addEventListener('resize', function() {
-            klineChart.resize();
-            volChart.resize();
-        });
-    </script>
+</div>
 </body>
 </html>
